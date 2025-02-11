@@ -58,12 +58,10 @@ const socket = io("http://127.0.0.1:5000");
 const formatPacketData = (packet) => {
   const data = packet.data;
   return `Protocol: ${data.proto} (${data.service})|
-Source: ${data.sbytes} bytes | TTL: ${data.sttl} | Window: ${
-    data.swin
-  } | Load: ${data.sload} bps
-Destination: ${data.dbytes} bytes | TTL: ${data.dttl} | Window: ${
-    data.dwin
-  } | Load: ${data.dload} bps
+Source: ${data.sbytes} bytes | Window: ${data.swin} | Load: ${data.sload} bps
+Destination: ${data.dbytes} bytes | Window: ${data.dwin} | Load: ${
+    data.dload
+  } bps
 Packets: ${data.spkts} (source) / ${
     data.dpkts
   } (dest) | Rate: ${data.rate.toFixed(2)} pkts/sec
