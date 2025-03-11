@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -94,6 +95,20 @@ def stop_capture():
     capturing = False
     return {'status': 'stopped'}
 
+
+'''@app.route('/features', methods=['GET'])
+def get_features():
+    return {'features': features}
+    
+
+@app.route('/data', methods=['GET'])
+def get_data():
+    return {'data': data}
+
+
+
+
+    '''
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
