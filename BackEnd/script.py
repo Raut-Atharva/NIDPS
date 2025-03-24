@@ -37,7 +37,7 @@ def handle_flag_true():
     time.sleep(5)  # Simulate attack detection delay
     print('Anomaly Detected! Preventing attack...')
     socketio.emit('anomaly_detected')  # Notify frontend
-    socketio.emit('prediction', {'prediction': 'DDoS'})  # Send "DDoS" alert
+    socketio.emit('prediction', {'prediction': 'DoS'})  # Send "DDoS" alert
 
 
 def prevent():
