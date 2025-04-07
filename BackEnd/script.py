@@ -7,6 +7,7 @@ import pandas as pd
 import joblib
 import os
 import time
+import catboost
 
 app = Flask(__name__)
 CORS(app)
@@ -112,7 +113,8 @@ def process_packet(packet):
     if data['service'] != 'Unknown':
         socketio.emit('new_packet', {'data': data})
 
-    model = joblib.load('ML/catboost_model.pkl')
+    model = catboost.CatBoostClassifier()
+    model.load_model('ML/catboost_model.cbm')
     df = pd.DataFrame([data])
 
     if not flag:
