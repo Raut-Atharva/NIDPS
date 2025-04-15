@@ -244,6 +244,8 @@ const App = () => {
   const [status, setStatus] = useState("idle"); // idle | scanning | prevent
   const [capturing, setCapturing] = useState(false);
 
+  const TOAST_ID = "notification-toast";
+
   useEffect(() => {
     socket.on("new_packet", (data) => {
       setPackets((prevPackets) => [...prevPackets, data]);
@@ -251,12 +253,23 @@ const App = () => {
 
     socket.on("anomaly_detected", () => {
       setStatus("prevent");
-      toast.error("🚨 Anomaly Detected! Click 'Prevent' to block all traffic.");
+      if (!toast.isActive(TOAST_ID)) {
+        toast.error(
+          "🚨 Anomaly Detected! Click 'Prevent' to block all traffic.",
+          {
+            toastId: TOAST_ID,
+          }
+        );
+      }
     });
 
     socket.on("safe", () => {
       setStatus("scanning");
-      toast.success("✅ Network is safe. Continuing scan.");
+      if (!toast.isActive(TOAST_ID)) {
+        toast.success("✅ Network is safe. Continuing scan.", {
+          toastId: TOAST_ID,
+        });
+      }
 
       // Revert to idle (blue) after 5 seconds
       setTimeout(() => {
@@ -340,7 +353,7 @@ const App = () => {
           </div>
         </div>
 
-        <ToastContainer />
+        <ToastContainer limit={1} />
       </div>
     </div>
   );
