@@ -13,7 +13,8 @@ CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 capturing = False
-flag = False  # Simulated unsafe state
+flag = False
+flag = True
 attack_detected = False  # Track if an attack has been detected already
 
 model = catboost.CatBoostClassifier()
@@ -32,13 +33,13 @@ class mode1:
             return 'Normal'
 
 
-model = mode1()  # Simulated model for prediction
+model = mode1()
 
 
 def handle_flag_false(df):
     time.sleep(3)
     prediction = model.predict(df)
-    socketio.emit('safe')
+    socketio.emit(prediction)
     socketio.emit('prediction', {'prediction': prediction})
 
 
