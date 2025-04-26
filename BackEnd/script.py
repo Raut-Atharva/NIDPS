@@ -14,7 +14,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 capturing = False
 flag = False
-flag = True
+# flag = True
 attack_detected = False  # Track if an attack has been detected already
 
 model = catboost.CatBoostClassifier()
@@ -27,10 +27,23 @@ features = [
 ]
 
 
+def handle_flag_true():
+    attack_type = "DoS"
+    global attack_detected
+    print("Simulating attack analysis... (3 seconds)")
+    time.sleep(3)
+    print('Anomaly Detected! Take action!')
+    socketio.emit('anomaly_detected')
+    socketio.emit('prediction', {'prediction': attack_type})
+    attack_detected = True  # Mark attack as detected
+    stop_sniffing()  # Stop packet scanning once anomaly is detected
+
+
 class mode1:
     def predict(self, df):
         if not df.empty:
             return 'Normal'
+        return 'Unknown'
 
 
 model = mode1()
@@ -41,17 +54,6 @@ def handle_flag_false(df):
     prediction = model.predict(df)
     socketio.emit(prediction)
     socketio.emit('prediction', {'prediction': prediction})
-
-
-def handle_flag_true():
-    global attack_detected
-    print("Simulating attack analysis... (5 seconds)")
-    time.sleep(3)
-    print('Anomaly Detected! Preventing attack...')
-    socketio.emit('anomaly_detected')
-    socketio.emit('prediction', {'prediction': 'DoS'})
-    attack_detected = True  # Mark attack as detected
-    stop_sniffing()  # Stop packet scanning once anomaly is detected
 
 
 def prevent():
