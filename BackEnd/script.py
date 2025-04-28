@@ -14,7 +14,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 capturing = False
 flag = False
-# flag = True
+flag = True
 attack_detected = False  # Track if an attack has been detected already
 
 model = catboost.CatBoostClassifier()
@@ -43,7 +43,7 @@ class mode1:
     def predict(self, df):
         if not df.empty:
             return 'Normal'
-        return 'Unknown'
+        return 'Normal'
 
 
 model = mode1()

@@ -24,6 +24,7 @@ const App = () => {
   const [capturing, setCapturing] = useState(false);
 
   const TOAST_ID = "notification-toast";
+  const TOAST_ID_2 = "predicition-toast";
 
   useEffect(() => {
     socket.on("new_packet", (data) => {
@@ -39,6 +40,14 @@ const App = () => {
             toastId: TOAST_ID,
           }
         );
+      }
+    });
+
+    socket.on("prediction", (prediction) => {
+      if (!toast.isActive(TOAST_ID_2)) {
+        toast.info(`🔍 Prediction: ${prediction.prediction}`, {
+          toastId: TOAST_ID_2,
+        });
       }
     });
 
@@ -60,7 +69,8 @@ const App = () => {
     return () => {
       socket.off("new_packet");
       socket.off("anomaly_detected");
-      socket.off("safe");
+      socket.off("prediction");
+      socket.off("Normal");
     };
   }, []);
 
