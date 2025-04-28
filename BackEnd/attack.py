@@ -7,7 +7,8 @@ from scapy.all import *
 import subprocess
 
 # === ATTACK SELECTOR ===
-attack_type = "DoS"  # Change this to: Recon, Fuzzer, Backdoor, Exploit, Shellcode, Worm
+# Change this to: Recon, Fuzzer, Backdoor, Exploit, Shellcode, Worm, DoS
+
 
 # Common configuration
 TARGET_IP = "127.0.0.1"
@@ -34,16 +35,25 @@ def simulate_dos(target=TARGET_IP, port=TARGET_PORT):
 # === Reconnaissance ===
 
 
-def simulate_recon(target=TARGET_IP, port=TARGET_PORT):
-    print("[*] Starting Reconnaissance scan on port", port)
-    try:
-        s = socket.socket()
-        s.settimeout(0.1)
-        s.connect((target, port))
-        print(f"[+] Port {port} is OPEN")
-        s.close()
-    except:
-        print(f"[-] Port {port} is CLOSED or FILTERED")
+def simulate_recon(target=TARGET_IP, port_range=(1, 10000)):
+    print(
+        f"[*] Starting full reconnaissance scan on {target} ports {port_range[0]}-{port_range[1]}")
+    open_ports = []
+
+    for port in range(port_range[0], port_range[1] + 1):
+        try:
+            s = socket.socket()
+            s.settimeout(0.05)  # Short timeout for faster scan
+            s.connect((target, port))
+            open_ports.append(port)
+            s.close()
+        except:
+            pass  # Port is closed or unreachable
+
+    if open_ports:
+        print(f"[+] Open ports on {target}: {open_ports}")
+    else:
+        print("[-] No open ports found.")
 
 # === Fuzzer ===
 
@@ -108,19 +118,27 @@ def simulate_worm():
         print(f"[+] Worm copied to {target_file}")
 
 
-# === Dispatcher ===
-attack_dispatcher = {
-    "DoS": simulate_dos,
-    "Recon": simulate_recon,
-    "Fuzzer": simulate_fuzzer,
-    "Backdoor": simulate_backdoor,
-    "Exploit": simulate_exploit,
-    "Shellcode": simulate_shellcode,
-    "Worm": simulate_worm,
-}
 
-# === Attack Execution ===
-if attack_type in attack_dispatcher:
-    attack_dispatcher[attack_type]()
-else:
-    print(f"[!] Invalid attack type: {attack_type}")
+if __name__ == "__main__":
+    attack_type = "Recon"
+
+    # === Dispatcher ===
+    attack_dispatcher = {
+        "DoS": simulate_dos,
+        "Recon": simulate_recon,
+        "Fuzzer": simulate_fuzzer,
+        "Backdoor": simulate_backdoor,
+        "Exploit": simulate_exploit,
+        "Shellcode": simulate_shellcode,
+        "Worm": simulate_worm,
+    }
+
+    # === Attack Execution ===
+    if attack_type in attack_dispatcher:
+        if attack_type == "Recon":
+            # Updated here to include 9090
+            attack_dispatcher[attack_type](port_range=(1, 10000))
+        else:
+            attack_dispatcher[attack_type]()
+    else:
+        print(f"[!] Invalid attack type: {attack_type}")

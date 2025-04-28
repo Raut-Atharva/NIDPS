@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import time
 import catboost
+from attack import attack_type
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +29,7 @@ features = [
 
 
 def handle_flag_true():
-    attack_type = "DoS"
+    attack_type = attack_type
     global attack_detected
     print("Simulating attack analysis... (3 seconds)")
     time.sleep(3)
