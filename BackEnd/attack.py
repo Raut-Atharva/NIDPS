@@ -15,7 +15,7 @@ TARGET_IP = "127.0.0.1"
 TARGET_PORT = 9090   # 🚀 Attack will happen on 9090 everywhere!
 
 # === DoS Attack ===
-
+attack_type = "Recon"
 
 def simulate_dos(target=TARGET_IP, port=TARGET_PORT):
     def attack():
@@ -120,7 +120,6 @@ def simulate_worm():
 
 
 if __name__ == "__main__":
-    attack_type = "Recon"
 
     # === Dispatcher ===
     attack_dispatcher = {
